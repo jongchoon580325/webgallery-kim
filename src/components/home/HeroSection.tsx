@@ -110,7 +110,7 @@ export default function HeroSection({ scrollY }: HeroSectionProps) {
               letterSpacing: '0.05em',
             }}
           >
-            "In the beginning God created the heaven and the earth (Gen 1:1)"
+            &ldquo;In the beginning God created the heaven and the earth (Gen 1:1)&rdquo;
           </Typography>
         </motion.div>
       </Container>
