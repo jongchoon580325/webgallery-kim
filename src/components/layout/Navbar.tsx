@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AppBar, Toolbar, Typography, Button, IconButton, Box } from '@mui/material';
 import { Brightness4, Brightness7 } from '@mui/icons-material';
+import FireworksEffect from '@/effects/FireworksEffect';
 
 interface NavbarProps {
   darkMode: boolean;
@@ -38,131 +39,82 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleDarkMode }) => {
           transform: 'translateX(-50%)',
         }}>
           <Link href="/" passHref>
-            <Button 
-              color="inherit"
-              size="large"
-              sx={{ 
-                fontSize: '1.2rem',
-                fontWeight: pathname === '/' ? 'bold' : 'normal',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before, &::after': {
-                  content: '""',
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  width: '4px',
-                  height: '4px',
-                  borderRadius: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  opacity: 0,
-                  transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                  background: 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 50%, transparent 100%)',
-                },
-                '&:hover::before': {
-                  animation: 'firework1 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                },
-                '&:hover::after': {
-                  animation: 'firework2 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s',
-                },
-                '@keyframes firework1': {
-                  '0%': {
-                    transform: 'translate(-50%, -50%) scale(1)',
-                    opacity: 0,
-                  },
-                  '50%': {
-                    transform: 'translate(-50%, -50%) scale(15)',
-                    opacity: 0.5,
-                  },
-                  '100%': {
-                    transform: 'translate(-50%, -50%) scale(30)',
-                    opacity: 0,
-                  }
-                },
-                '@keyframes firework2': {
-                  '0%': {
-                    transform: 'translate(-50%, -50%) scale(1)',
-                    opacity: 0,
-                  },
-                  '50%': {
-                    transform: 'translate(-50%, -50%) scale(20)',
-                    opacity: 0.4,
-                  },
-                  '100%': {
-                    transform: 'translate(-50%, -50%) scale(35)',
-                    opacity: 0,
-                  }
-                }
-              }}
+            <FireworksEffect
+              particleCount={30}
+              duration={1500}
+              triggerOnHover={true}
+              triggerOnClick={false}
+              particleSize={4}
+              spread={120}
             >
-              홈
-            </Button>
+              <Button 
+                color="inherit"
+                size="large"
+                disableRipple
+                sx={{ 
+                  fontSize: '1.2rem',
+                  fontWeight: pathname === '/' ? 'bold' : 'normal',
+                  color: pathname === '/' ? '#eb4034' : 'inherit',
+                  '&:hover': {
+                    background: 'transparent'
+                  }
+                }}
+              >
+                홈
+              </Button>
+            </FireworksEffect>
           </Link>
           <Link href="/gallery" passHref>
-            <Button 
-              color="inherit"
-              size="large"
-              sx={{ 
-                fontSize: '1.2rem',
-                fontWeight: pathname === '/gallery' ? 'bold' : 'normal',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before, &::after': {
-                  content: '""',
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  width: '4px',
-                  height: '4px',
-                  borderRadius: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  opacity: 0,
-                  transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                  background: 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 50%, transparent 100%)',
-                },
-                '&:hover::before': {
-                  animation: 'firework1 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                },
-                '&:hover::after': {
-                  animation: 'firework2 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s',
-                },
-              }}
+            <FireworksEffect
+              particleCount={30}
+              duration={1500}
+              triggerOnHover={true}
+              triggerOnClick={false}
+              particleSize={4}
+              spread={120}
             >
-              갤러리
-            </Button>
+              <Button 
+                color="inherit"
+                size="large"
+                disableRipple
+                sx={{ 
+                  fontSize: '1.2rem',
+                  fontWeight: pathname === '/gallery' ? 'bold' : 'normal',
+                  color: pathname === '/gallery' ? '#eb4034' : 'inherit',
+                  '&:hover': {
+                    background: 'transparent'
+                  }
+                }}
+              >
+                갤러리
+              </Button>
+            </FireworksEffect>
           </Link>
           <Link href="/management" passHref>
-            <Button 
-              color="inherit"
-              size="large"
-              sx={{ 
-                fontSize: '1.2rem',
-                fontWeight: pathname === '/management' ? 'bold' : 'normal',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before, &::after': {
-                  content: '""',
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  width: '4px',
-                  height: '4px',
-                  borderRadius: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  opacity: 0,
-                  transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                  background: 'radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 50%, transparent 100%)',
-                },
-                '&:hover::before': {
-                  animation: 'firework1 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                },
-                '&:hover::after': {
-                  animation: 'firework2 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s',
-                },
-              }}
+            <FireworksEffect
+              particleCount={30}
+              duration={1500}
+              triggerOnHover={true}
+              triggerOnClick={false}
+              particleSize={4}
+              spread={120}
             >
-              관리
-            </Button>
+              <Button 
+                color="inherit"
+                size="large"
+                disableRipple
+                sx={{ 
+                  fontSize: '1.2rem',
+                  fontWeight: pathname === '/management' ? 'bold' : 'normal',
+                  color: pathname === '/management' ? '#eb4034' : 'inherit',
+                  '&:hover': {
+                    background: 'transparent'
+                  }
+                }}
+              >
+                관리
+              </Button>
+            </FireworksEffect>
           </Link>
         </Box>
         <IconButton color="inherit" onClick={toggleDarkMode}>

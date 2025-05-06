@@ -313,7 +313,7 @@ export default function GalleryPage() {
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h5" fontWeight={700} sx={{ color: 'black' }}>사진 갤러리</Typography>
+        <Typography variant="h5" fontWeight={700}>사진 갤러리</Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
           {selectedImages.length > 0 && (
             <>
@@ -522,8 +522,8 @@ export default function GalleryPage() {
           p: 4,
           minWidth: 320,
         }}>
-          <Typography variant="h6" mb={2} sx={{ color: 'black' }}>정말 삭제하시겠습니까?</Typography>
-          <Typography mb={3} sx={{ color: 'black' }}>{selectedImages.length}개의 이미지를 삭제합니다.</Typography>
+          <Typography variant="h6" mb={2}>정말 삭제하시겠습니까?</Typography>
+          <Typography mb={3}>{selectedImages.length}개의 이미지를 삭제합니다.</Typography>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
             <Button onClick={closeDeleteModal}>취소</Button>
             <Button color="error" variant="contained" onClick={handleDelete}>삭제</Button>

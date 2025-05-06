@@ -1,0 +1,106 @@
+// ImageGallery.js
+import React, { useState } from 'react';
+import './ImageGallery.css';
+
+const ImageGallery = () => {
+  // 예시 이미지 데이터 배열 (실제 애플리케이션에서는 props로 받거나 API에서 가져올 수 있습니다)
+  const [images, setImages] = useState(Array.from({ length: 25 }, (_, index) => ({
+    id: index + 1,
+    src: `/api/placeholder/300/300`, // 실제 애플리케이션에서는 실제 이미지 URL을 사용하세요
+    alt: `Image ${index + 1}`,
+    selected: false
+  })));
+  
+  // 선택된 이미지 ID 목록
+  const [selectedImages, setSelectedImages] = useState([]);
+  
+  // 모달 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // 체크박스 클릭 핸들러
+  const handleCheckboxChange = (id) => {
+    setImages(images.map(image => 
+      image.id === id ? { ...image, selected: !image.selected } : image
+    ));
+    
+    setSelectedImages(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(imageId => imageId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
+  };
+  
+  // 선택된 이미지 삭제 핸들러
+  const handleDelete = () => {
+    setImages(images.filter(image => !selectedImages.includes(image.id)));
+    setSelectedImages([]);
+    setIsModalOpen(false);
+  };
+  
+  // 삭제 확인 모달 열기
+  const openDeleteModal = () => {
+    if (selectedImages.length > 0) {
+      setIsModalOpen(true);
+    }
+  };
+  
+  // 모달 닫기
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  return (
+    <div className="gallery-container">
+      <div className="gallery-header">
+        <h1>이미지 갤러리</h1>
+        {selectedImages.length > 0 && (
+          <button 
+            className="delete-button" 
+            onClick={openDeleteModal}
+          >
+            선택한 이미지 삭제 ({selectedImages.length})
+          </button>
+        )}
+      </div>
+      
+      <div className="gallery-grid">
+        {images.map(image => (
+          <div 
+            key={image.id} 
+            className={`image-container ${image.selected ? 'selected' : ''}`}
+          >
+            <div className="image-wrapper">
+              <img src={image.src} alt={image.alt} />
+              <div className="image-overlay">
+                <input
+                  type="checkbox"
+                  className="image-checkbox"
+                  checked={image.selected}
+                  onChange={() => handleCheckboxChange(image.id)}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {/* 삭제 확인 모달 */}
+      {isModalOpen && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <h2>삭제 확인</h2>
+            <p>선택한 {selectedImages.length}개의 이미지를 정말 삭제하시겠습니까?</p>
+            <div className="modal-buttons">
+              <button className="cancel-button" onClick={closeModal}>취소</button>
+              <button className="delete-confirm-button" onClick={handleDelete}>삭제</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ImageGallery;

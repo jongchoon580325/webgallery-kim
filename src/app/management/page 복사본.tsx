@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Typography, Box, Divider, Grid, TextField, Button, MenuItem, Paper, List, ListItem, ListItemText, IconButton, LinearProgress, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@mui/material';
+import { Container, Typography, Box, Divider, Grid, TextField, Button, MenuItem, Paper, List, ListItem, ListItemText, IconButton, LinearProgress } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -63,14 +63,6 @@ function calculateImageSize(dataUrl: string): number {
   return Number((sizeInBytes / (1024 * 1024)).toFixed(2));
 }
 
-// 애니메이션 타입 정의
-const ANIMATION_TYPES = {
-  FADE_IN: 'fadeIn',
-  SLIDE_UP: 'slideUp',
-} as const;
-
-type AnimationType = typeof ANIMATION_TYPES[keyof typeof ANIMATION_TYPES];
-
 export default function ManagementPage() {
   // 카테고리 상태 초기화를 빈 배열로 변경 (타입 명시)
   const [categories, setCategories] = useState<Category[]>([]);
@@ -102,9 +94,6 @@ export default function ManagementPage() {
   // 데이터 초기화 관련 상태
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
-
-  // 애니메이션 관련 상태
-  const [selectedAnimation, setSelectedAnimation] = useState<AnimationType>(ANIMATION_TYPES.FADE_IN);
 
   // DB 연동: 카테고리 fetch
   const fetchCategories = async () => {
@@ -350,33 +339,8 @@ export default function ManagementPage() {
     }
   };
 
-  // 애니메이션 설정 저장
-  const handleAnimationChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newAnimation = event.target.value as AnimationType;
-    setSelectedAnimation(newAnimation);
-    
-    try {
-      localStorage.setItem('homeTextAnimation', newAnimation);
-      setSuccessModal({
-        open: true,
-        message: '애니메이션 설정이 저장되었습니다.',
-      });
-    } catch (error) {
-      console.error('애니메이션 설정 저장 중 오류:', error);
-      alert('애니메이션 설정 저장 중 오류가 발생했습니다.');
-    }
-  };
-
-  // 컴포넌트 마운트 시 저장된 애니메이션 설정 불러오기
-  useEffect(() => {
-    const savedAnimation = localStorage.getItem('homeTextAnimation') as AnimationType;
-    if (savedAnimation) {
-      setSelectedAnimation(savedAnimation);
-    }
-  }, []);
-
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
         <Typography 
           variant="h3" 
@@ -533,7 +497,7 @@ export default function ManagementPage() {
           </Paper>
         </Grid>
       </Grid>
-      <Divider sx={{ my: 4, borderStyle: 'dotted', borderColor: 'grey.400', borderWidth: '1px' }} />
+      <Divider sx={{ my: 4, borderStyle: 'dotted', borderWidth: '1px' }} />
       
       {/* 데이터 관리 섹션 */}
       <Grid container spacing={4}>
@@ -773,7 +737,7 @@ export default function ManagementPage() {
         </DialogActions>
       </Dialog>
       {/* 데이터 관리 안내 섹션 */}
-      <Divider sx={{ my: 4, borderStyle: 'dotted', borderColor: 'grey.400', borderWidth: '2px' }} />
+      <Divider sx={{ my: 4, borderStyle: 'dotted', borderWidth: '2px' }} />
       <Paper sx={{ p: 4, mt: 4, mb: 8, bgcolor: 'background.paper', borderRadius: 3, boxShadow: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
           <InfoIcon color="primary" sx={{ fontSize: 32, mr: 1 }} />
@@ -825,41 +789,6 @@ export default function ManagementPage() {
             </Box>
           </Box>
         </Box>
-      </Paper>
-
-      {/* 데이터 관리 섹션과 애니메이션 설정 섹션 사이의 구분선 */}
-      <Divider sx={{ 
-        my: 4, 
-        borderStyle: 'dashed',
-        borderColor: 'grey.400',
-        borderWidth: '1px'
-      }} />
-
-      {/* 홈 화면 애니메이션 설정 섹션 */}
-      <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
-        <Typography variant="h6" gutterBottom>
-          홈 화면 애니메이션 설정
-        </Typography>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">홈 화면의 &apos;Smart Photo Gallery&apos; 텍스트에 적용할 애니메이션 효과 선택</FormLabel>
-          <RadioGroup
-            aria-label="animation"
-            name="animation"
-            value={selectedAnimation}
-            onChange={handleAnimationChange}
-          >
-            <FormControlLabel 
-              value={ANIMATION_TYPES.FADE_IN} 
-              control={<Radio />} 
-              label="페이드 인 효과" 
-            />
-            <FormControlLabel 
-              value={ANIMATION_TYPES.SLIDE_UP} 
-              control={<Radio />} 
-              label="슬라이드 업 효과" 
-            />
-          </RadioGroup>
-        </FormControl>
       </Paper>
     </Container>
   );

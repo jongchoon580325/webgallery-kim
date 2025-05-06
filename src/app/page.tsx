@@ -10,11 +10,20 @@ import Link from 'next/link';
 
 export default function HomePage() {
   const [scrollY, setScrollY] = useState(0);
+  const [animationType, setAnimationType] = useState<'fadeIn' | 'slideUp'>('fadeIn');
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // 저장된 애니메이션 설정 불러오기
+  useEffect(() => {
+    const savedAnimation = localStorage.getItem('homeTextAnimation') as 'fadeIn' | 'slideUp';
+    if (savedAnimation) {
+      setAnimationType(savedAnimation);
+    }
   }, []);
 
   const features = [
@@ -37,43 +46,31 @@ export default function HomePage() {
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
-      <HeroSection scrollY={scrollY} />
+      <HeroSection scrollY={scrollY} animationType={animationType} />
       
       <Container maxWidth="lg" sx={{ py: 12 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+        <Typography
+          variant="h2"
+          component="h2"
+          align="center"
+          gutterBottom
+          sx={{
+            fontWeight: 700,
+            background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+            backgroundClip: 'text',
+            textFillColor: 'transparent',
+            mb: 8
+          }}
         >
-          <Typography
-            variant="h2"
-            component="h2"
-            align="center"
-            gutterBottom
-            sx={{
-              fontWeight: 700,
-              background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-              backgroundClip: 'text',
-              textFillColor: 'transparent',
-              mb: 8
-            }}
-          >
-            특별한 순간을 더욱 특별하게
-          </Typography>
-        </motion.div>
+          특별한 순간을 더욱 특별하게
+        </Typography>
 
         <Grid container spacing={4}>
           {features.map((feature, index) => (
             <Grid item xs={12} md={4} key={index}>
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                viewport={{ once: true }}
-              >
+              <Box>
                 <FeatureCard {...feature} />
-              </motion.div>
+              </Box>
             </Grid>
           ))}
         </Grid>

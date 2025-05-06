@@ -92,3 +92,46 @@ body {
 .firework-button:hover::after {
   animation: fireworkBottom 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
+
+/* 애니메이션 키프레임 정의 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 애니메이션 클래스 */
+.animate-fadeIn {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-slideUp {
+  animation: slideUp 1s ease-out forwards;
+}
+
+/* 애니메이션 지연 클래스 */
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}

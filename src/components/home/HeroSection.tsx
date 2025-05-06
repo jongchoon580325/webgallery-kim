@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Box, Container, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
+import FireworksEffect, { FireworksEffectRef } from '../../effects/FireworksEffect';
 
 interface HeroSectionProps {
   scrollY: number;
+  animationType?: 'fadeIn' | 'slideUp';
 }
 
-export default function HeroSection({ scrollY }: HeroSectionProps) {
+export default function HeroSection({ scrollY, animationType = 'fadeIn' }: HeroSectionProps) {
+  const fireworksRef = useRef<FireworksEffectRef>(null);
+
+  const handleTitleAnimationComplete = () => {
+    if (fireworksRef.current) {
+      fireworksRef.current.triggerFireworks();
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -18,7 +28,7 @@ export default function HeroSection({ scrollY }: HeroSectionProps) {
         overflow: 'hidden',
       }}
     >
-      {/* For Kim,Yeon-seon 텍스트 */}
+      {/* What a wonderful world 텍스트 */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -39,18 +49,22 @@ export default function HeroSection({ scrollY }: HeroSectionProps) {
             textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
           }}
         >
-          For Kim,Yeon-seon
+          What a wonderful world is! Praise God!
         </Typography>
       </motion.div>
 
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
+        <FireworksEffect
+          ref={fireworksRef}
+          particleCount={40}
+          duration={2000}
+          triggerOnHover={false}
+          triggerOnClick={false}
         >
           <Typography
             variant="h1"
+            className={`animate-${animationType}`}
+            onAnimationEnd={handleTitleAnimationComplete}
             sx={{
               fontSize: { xs: '2.5rem', md: '4rem' },
               fontWeight: 800,
@@ -62,7 +76,7 @@ export default function HeroSection({ scrollY }: HeroSectionProps) {
           >
             Smart Photo Gallery
           </Typography>
-        </motion.div>
+        </FireworksEffect>
 
         <motion.div
           initial={{ opacity: 0 }}
@@ -115,7 +129,7 @@ export default function HeroSection({ scrollY }: HeroSectionProps) {
         </motion.div>
       </Container>
 
-      {/* Since 1957 ~ 2025 텍스트 */}
+      {/* Since 2025 ~  텍스트 */}
       <motion.div
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -137,7 +151,7 @@ export default function HeroSection({ scrollY }: HeroSectionProps) {
             fontStyle: 'italic',
           }}
         >
-          Since 1957 ~ 2025
+          {`Since 1957 ~ ${new Date().getFullYear()}`}
         </Typography>
       </motion.div>
     </Box>
