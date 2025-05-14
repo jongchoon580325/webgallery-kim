@@ -18,6 +18,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* PWA: manifest, favicon, theme-color, service worker registration */}
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/deacon_kim_01.ico" />
+        <meta name="theme-color" content="#2196F3" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `,
+          }}
+        />
+      </head>
       <body className={inter.className}>
         <ClientLayout>{children}</ClientLayout>
       </body>

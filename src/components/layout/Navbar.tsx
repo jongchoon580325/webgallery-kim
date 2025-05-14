@@ -1,9 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AppBar, Toolbar, Typography, Button, IconButton, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, IconButton, Box, useMediaQuery } from '@mui/material';
 import { Brightness4, Brightness7 } from '@mui/icons-material';
 import FireworksEffect from '@/effects/FireworksEffect';
+import HomeIcon from '@mui/icons-material/Home';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 interface NavbarProps {
   darkMode: boolean;
@@ -12,6 +15,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleDarkMode }) => {
   const pathname = usePathname();
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   return (
     <AppBar position="static">
@@ -60,7 +64,7 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleDarkMode }) => {
                   }
                 }}
               >
-                홈
+                {isMobile ? <HomeIcon /> : '홈'}
               </Button>
             </FireworksEffect>
           </Link>
@@ -86,7 +90,7 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleDarkMode }) => {
                   }
                 }}
               >
-                갤러리
+                {isMobile ? <PhotoLibraryIcon /> : '갤러리'}
               </Button>
             </FireworksEffect>
           </Link>
@@ -112,7 +116,7 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleDarkMode }) => {
                   }
                 }}
               >
-                관리
+                {isMobile ? <SettingsIcon /> : '관리'}
               </Button>
             </FireworksEffect>
           </Link>

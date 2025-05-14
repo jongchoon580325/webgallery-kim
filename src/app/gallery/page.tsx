@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Container, Typography, Box, Divider, Grid, Card, CardContent, CardMedia, Select, MenuItem, FormControl, InputLabel, Pagination, Stack, Modal, IconButton, TextField } from '@mui/material';
+import { Container, Typography, Box, Divider, Grid, Card, CardContent, CardMedia, Select, MenuItem, FormControl, InputLabel, Pagination, Stack, Modal, IconButton, TextField, Fab, Zoom } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -16,6 +16,7 @@ import OptimizedImage from '@/components/common/OptimizedImage';
 import { XMarkIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const sampleCategories = [
   { id: 0, name: '전체' },
@@ -51,6 +52,7 @@ export default function GalleryPage() {
   const [locations, setLocations] = useState<string[]>([]);
   const [selectedImages, setSelectedImages] = useState<number[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   // DB에서 사진/카테고리 fetch
   useEffect(() => {
@@ -217,11 +219,23 @@ export default function GalleryPage() {
     setIsDeleteModalOpen(false);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 200);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
         <Typography 
-          variant="h3" 
+          variant="h4" 
           component="h1" 
           gutterBottom
           sx={{ color: theme => theme.palette.mode === 'light' ? '#202421' : 'inherit', fontWeight: 'bold' }}
@@ -522,14 +536,32 @@ export default function GalleryPage() {
           p: 4,
           minWidth: 320,
         }}>
-          <Typography variant="h6" mb={2} sx={{ color: 'black' }}>정말 삭제하시겠습니까?</Typography>
-          <Typography mb={3} sx={{ color: 'black' }}>{selectedImages.length}개의 이미지를 삭제합니다.</Typography>
+          <Typography variant="h6" mb={2} sx={{ color: 'white' }}>정말 삭제하시겠습니까?</Typography>
+          <Typography mb={3} sx={{ color: 'white' }}>{selectedImages.length}개의 이미지를 삭제합니다.</Typography>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
             <Button onClick={closeDeleteModal}>취소</Button>
             <Button color="error" variant="contained" onClick={handleDelete}>삭제</Button>
           </Box>
         </Box>
       </Modal>
+      {/* 위로가기 버튼 */}
+      <Zoom in={showScrollTop}>
+        <Fab
+          color="primary"
+          size="medium"
+          onClick={handleScrollTop}
+          sx={{
+            position: 'fixed',
+            bottom: 32,
+            right: 32,
+            zIndex: 1200,
+            boxShadow: 3,
+          }}
+          aria-label="위로가기"
+        >
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </Zoom>
     </Container>
   );
 } 

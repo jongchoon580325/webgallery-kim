@@ -1,19 +1,26 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Box, Container, Typography, Button, Grid, Paper } from '@mui/material';
+import { Box, Container, Typography, Button, Grid, Paper, LinearProgress, Fab, Zoom } from '@mui/material';
 import { motion } from 'framer-motion';
 import HeroSection from '@/components/home/HeroSection';
 import FeatureCard from '@/components/home/FeatureCard';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Link from 'next/link';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export default function HomePage() {
   const [scrollY, setScrollY] = useState(0);
   const [animationType, setAnimationType] = useState<'fadeIn' | 'slideUp'>('fadeIn');
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 200);
+      setScrollY(window.scrollY);
+    };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -44,30 +51,59 @@ export default function HomePage() {
     },
   ];
 
+  // 업로드 시뮬레이션 함수
+  const handleUpload = () => {
+    setUploading(true);
+    setProgress(0);
+    let value = 0;
+    const interval = setInterval(() => {
+      value += Math.random() * 20 + 10; // 10~30%씩 증가
+      if (value >= 100) {
+        value = 100;
+        setProgress(value);
+        clearInterval(interval);
+        setTimeout(() => setUploading(false), 500); // 잠시 후 프로그레스 바 숨김
+      } else {
+        setProgress(value);
+      }
+    }, 300);
+  };
+
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
       <HeroSection scrollY={scrollY} animationType={animationType} />
       
       <Container maxWidth="lg" sx={{ py: 12 }}>
         <Typography
-          variant="h2"
+          variant="h3"
           component="h2"
           align="center"
           gutterBottom
           sx={{
-            fontWeight: 700,
+            fontWeight: 500,
             background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
             backgroundClip: 'text',
             textFillColor: 'transparent',
-            mb: 8
+            mb: 8,
+            // 반응형 폰트 크기 설정
+            // xs: 모바일(600px 이하), sm: 태블릿(600px 이상), md: 데스크탑(900px 이상)
+            fontSize: {
+              xs: '2rem', // 모바일: 작은 화면에서 더 작은 폰트, 기본 1.2rem
+              sm: '2rem', // 태블릿: 중간 크기 화면, 기본 1.5rem
+              md: '2rem',   // 데스크탑: 넓은 화면에서 크게
+            },
           }}
         >
           특별한 순간을 더욱 특별하게
         </Typography>
 
-        <Grid container spacing={4}>
+        <Grid container spacing={4} component={motion.div} layout>
           {features.map((feature, index) => (
-            <Grid item xs={12} md={4} key={index}>
+            <Grid item xs={12} md={4} key={index} component={motion.div} layout transition={{ type: 'spring', stiffness: 300, damping: 30 }} whileHover={{ y: -12, boxShadow: '0 8px 32px rgba(31, 38, 135, 0.15)' }}>
               <Box>
                 <FeatureCard {...feature} />
               </Box>
@@ -75,7 +111,14 @@ export default function HomePage() {
           ))}
         </Grid>
 
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8, flexDirection: 'column', alignItems: 'center' }}>
+          {/* 업로드 프로그레스 바 */}
+          {uploading && (
+            <Box sx={{ width: '100%', mb: 2 }}>
+              <LinearProgress variant="determinate" value={progress} />
+              <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 1 }}>{Math.round(progress)}%</Typography>
+            </Box>
+          )}
           <Link href="/gallery" passHref>
             <Button
               variant="contained"
@@ -95,12 +138,33 @@ export default function HomePage() {
                   transition: 'all 0.3s ease',
                 },
               }}
+              onClick={handleUpload}
+              disabled={uploading}
             >
               갤러리 둘러보기
             </Button>
           </Link>
         </Box>
       </Container>
+
+      {/* 위로가기 버튼 */}
+      <Zoom in={showScrollTop}>
+        <Fab
+          color="primary"
+          size="medium"
+          onClick={handleScrollTop}
+          sx={{
+            position: 'fixed',
+            bottom: 32,
+            right: 32,
+            zIndex: 1200,
+            boxShadow: 3,
+          }}
+          aria-label="위로가기"
+        >
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </Zoom>
     </Box>
   );
 }

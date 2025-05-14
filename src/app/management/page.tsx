@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Typography, Box, Divider, Grid, TextField, Button, MenuItem, Paper, List, ListItem, ListItemText, IconButton, LinearProgress, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@mui/material';
+import { Container, Typography, Box, Divider, Grid, TextField, Button, MenuItem, Paper, List, ListItem, ListItemText, IconButton, LinearProgress, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel, Fab, Zoom } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -38,6 +38,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import InfoIcon from '@mui/icons-material/Info';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import FolderZipIcon from '@mui/icons-material/FolderZip';
+import { useRouter } from 'next/navigation';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 // 기본 카테고리 상수로 정의
 const defaultCategories = [
@@ -72,6 +74,7 @@ const ANIMATION_TYPES = {
 type AnimationType = typeof ANIMATION_TYPES[keyof typeof ANIMATION_TYPES];
 
 export default function ManagementPage() {
+  const router = useRouter();
   // 카테고리 상태 초기화를 빈 배열로 변경 (타입 명시)
   const [categories, setCategories] = useState<Category[]>([]);
   const [newCategory, setNewCategory] = useState('');
@@ -105,6 +108,9 @@ export default function ManagementPage() {
 
   // 애니메이션 관련 상태
   const [selectedAnimation, setSelectedAnimation] = useState<AnimationType>(ANIMATION_TYPES.FADE_IN);
+
+  // 위로가기 버튼 관련 상태
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   // DB 연동: 카테고리 fetch
   const fetchCategories = async () => {
@@ -158,11 +164,8 @@ export default function ManagementPage() {
       
       setForm({ date: '', location: '', photographer: '', categoryId: '', files: [] });
       
-      // 성공 모달 표시 (저장된 크기 정보 포함)
-      setSuccessModal({
-        open: true,
-        message: `${form.files.length}장의 사진이 성공적으로 업로드되었습니다!\n(저장된 크기: ${totalSize.toFixed(2)}MB)`,
-      });
+      // 업로드 성공 시 갤러리 페이지로 이동
+      router.push('/gallery');
     } catch (error) {
       console.error('사진 업로드 중 오류:', error);
       alert('사진 업로드 중 오류가 발생했습니다.');
@@ -375,11 +378,24 @@ export default function ManagementPage() {
     }
   }, []);
 
+  // 위로가기 버튼 관련 효과
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 200);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
         <Typography 
-          variant="h3" 
+          variant="h4" 
           component="h1" 
           gutterBottom
           sx={{ color: theme => theme.palette.mode === 'light' ? '#202421' : 'inherit', fontWeight: 'bold' }}
@@ -405,6 +421,16 @@ export default function ManagementPage() {
                 InputLabelProps={{ shrink: true }}
                 value={form.date}
                 onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
+                InputProps={{
+                  sx: {
+                    '& input[type="date"]::-webkit-calendar-picker-indicator': {
+                      filter: 'invert(1)',
+                    },
+                    '& input[type="date"]::-ms-input-placeholder': {
+                      color: '#fff',
+                    },
+                  },
+                }}
               />
               <TextField
                 label="위치"
@@ -412,6 +438,7 @@ export default function ManagementPage() {
                 margin="normal"
                 value={form.location}
                 onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
+                placeholder="예) 수원시 한일타운 아파트"
               />
               <TextField
                 label="사진작가"
@@ -419,6 +446,7 @@ export default function ManagementPage() {
                 margin="normal"
                 value={form.photographer}
                 onChange={e => setForm(f => ({ ...f, photographer: e.target.value }))}
+                placeholder="예) 김연선 작가"
               />
               <TextField
                 select
@@ -826,41 +854,24 @@ export default function ManagementPage() {
           </Box>
         </Box>
       </Paper>
-
-      {/* 데이터 관리 섹션과 애니메이션 설정 섹션 사이의 구분선 */}
-      <Divider sx={{ 
-        my: 4, 
-        borderStyle: 'dashed',
-        borderColor: 'grey.400',
-        borderWidth: '1px'
-      }} />
-
-      {/* 홈 화면 애니메이션 설정 섹션 */}
-      <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
-        <Typography variant="h6" gutterBottom>
-          홈 화면 애니메이션 설정
-        </Typography>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">홈 화면의 &apos;Smart Photo Gallery&apos; 텍스트에 적용할 애니메이션 효과 선택</FormLabel>
-          <RadioGroup
-            aria-label="animation"
-            name="animation"
-            value={selectedAnimation}
-            onChange={handleAnimationChange}
-          >
-            <FormControlLabel 
-              value={ANIMATION_TYPES.FADE_IN} 
-              control={<Radio />} 
-              label="페이드 인 효과" 
-            />
-            <FormControlLabel 
-              value={ANIMATION_TYPES.SLIDE_UP} 
-              control={<Radio />} 
-              label="슬라이드 업 효과" 
-            />
-          </RadioGroup>
-        </FormControl>
-      </Paper>
+      {/* 위로가기 버튼 */}
+      <Zoom in={showScrollTop}>
+        <Fab
+          color="primary"
+          size="medium"
+          onClick={handleScrollTop}
+          sx={{
+            position: 'fixed',
+            bottom: 32,
+            right: 32,
+            zIndex: 1200,
+            boxShadow: 3,
+          }}
+          aria-label="위로가기"
+        >
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </Zoom>
     </Container>
   );
 } 

@@ -94,7 +94,7 @@ export default function HeroSection({ scrollY, animationType = 'fadeIn' }: HeroS
               lineHeight: 1.6
             }}
           >
-            소중한 매순간을 더욱 아름답게 보관하고 간직하세요
+            소중한 순간을 더욱 아름답게 보관하고 간직하세요
           </Typography>
         </motion.div>
 
@@ -128,6 +128,34 @@ export default function HeroSection({ scrollY, animationType = 'fadeIn' }: HeroS
           </Typography>
         </motion.div>
       </Container>
+
+      {/* for 진수창,김연선 집사님 텍스트 */}
+      <motion.div
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
+        style={{
+          position: 'absolute',
+          bottom: '10%',
+          right: '5%',
+          zIndex: 1,
+        }}
+      >
+        <Typography
+          variant="h5"
+          sx={{
+            fontFamily: "'Playfair Display', serif",
+            color: '#FFA726',
+            letterSpacing: '0.08em',
+            fontWeight: 600,
+            textShadow: '1px 1px 2px rgba(0,0,0,0.08)',
+            textAlign: 'right',
+            mb: 0.5,
+          }}
+        >
+          for 진수창,김연선 집사님
+        </Typography>
+      </motion.div>
 
       {/* Since 2025 ~  텍스트 */}
       <motion.div

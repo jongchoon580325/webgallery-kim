@@ -11,8 +11,9 @@ interface FeatureCardProps {
 export default function FeatureCard({ title, description, icon }: FeatureCardProps) {
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: 'spring', bounce: 0.5, stiffness: 300, damping: 15 }}
     >
       <Paper
         elevation={2}
