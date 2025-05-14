@@ -25,11 +25,14 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleDarkMode }) => {
             variant="h6" 
             component="div" 
             sx={{ 
-              cursor: 'pointer',
-              '&:hover': {
+              cursor: isMobile ? 'default' : 'pointer',
+              color: isMobile ? '#bdbdbd' : 'inherit',
+              pointerEvents: isMobile ? 'none' : 'auto',
+              userSelect: isMobile ? 'none' : 'auto',
+              '&:hover': !isMobile ? {
                 transform: 'scale(1.05)',
                 transition: 'transform 0.2s ease-in-out',
-              }
+              } : undefined
             }}
           >
             Smart Gallery
