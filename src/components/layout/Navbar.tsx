@@ -20,24 +20,24 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, toggleDarkMode }) => {
   return (
     <AppBar position="static">
       <Toolbar sx={{ justifyContent: 'space-between', gap: 2 }}>
-        <Link href="/" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
-          <Typography 
-            variant="h6" 
-            component="div" 
-            sx={{ 
-              cursor: isMobile ? 'default' : 'pointer',
-              color: isMobile ? '#bdbdbd' : 'inherit',
-              pointerEvents: isMobile ? 'none' : 'auto',
-              userSelect: isMobile ? 'none' : 'auto',
-              '&:hover': !isMobile ? {
-                transform: 'scale(1.05)',
-                transition: 'transform 0.2s ease-in-out',
-              } : undefined
-            }}
-          >
-            Smart Gallery
-          </Typography>
-        </Link>
+        {/* 로고: 데스크탑에서만 노출, 모바일에서는 숨김 */}
+        {!isMobile && (
+          <Link href="/" passHref style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Typography 
+              variant="h6" 
+              component="div" 
+              sx={{ 
+                cursor: 'pointer',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                  transition: 'transform 0.2s ease-in-out',
+                }
+              }}
+            >
+              Smart Gallery
+            </Typography>
+          </Link>
+        )}
         <Box sx={{ 
           display: 'flex', 
           gap: 2,
